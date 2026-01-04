@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Payform — One link. Paid booking.</title>
+  <title>Payform — One link. Paid call or deposit.</title>
   <style>
     :root{
       --bg:#ffffff;
@@ -18,7 +18,6 @@
       --shadow:0 24px 70px rgba(11,18,32,.08);
       --shadow2:0 14px 40px rgba(11,18,32,.06);
       --focus: 0 0 0 4px rgba(37,99,235,.16);
-      --chipShadow: 0 10px 24px rgba(11,18,32,.06);
 
       /* Inner experience (always dark for clarity + consistency) */
       --pane:#0a1020;
@@ -99,6 +98,7 @@
 
     .topbar{display:flex; align-items:center; justify-content:space-between;padding:6px 6px 12px;color:var(--muted);font-size:12px;gap:10px;}
     .topbar .left{display:flex; align-items:center; gap:8px; min-width: 120px}
+    .topbar .center{display:flex; flex-direction:column; align-items:center; gap:6px}
 
     .viewToggle{display:inline-grid;grid-template-columns:1fr 1fr;gap:6px;padding:6px;border-radius:999px;border:1px solid var(--line);background: rgba(120,135,170,.08);box-shadow: 0 10px 22px rgba(11,18,32,.06);}
     .vt{border:1px solid transparent;background:transparent;color:var(--muted);font:inherit;font-weight:900;font-size:12px;height:30px;padding:0 12px;border-radius:999px;cursor:pointer;transition: background .16s ease, color .16s ease, transform .05s ease;-webkit-tap-highlight-color: transparent;white-space: nowrap;}
@@ -107,6 +107,8 @@
     .vt.on{background: var(--card);color: var(--text);border-color: rgba(120,135,170,.18);box-shadow: 0 10px 22px rgba(11,18,32,.08);}
     .vt:focus{outline:none; box-shadow: var(--focus)}
 
+    .tnote{font-size:11px; color: rgba(102,112,133,.9); font-weight:750}
+
     .lock{width:18px;height:18px;border-radius:8px;display:grid;place-items:center;border:1px solid var(--line);background:rgba(120,135,170,.10)}
 
     /* Top step bars */
@@ -114,7 +116,7 @@
     .pdot{flex:1;height:6px;border-radius:999px;border:1px solid var(--line);background: rgba(120,135,170,.12);overflow:hidden;}
     .pdot > i{display:block;height:100%;width:0%;background: rgba(37,99,235,.85);border-radius:999px;transition: width .25s ease}
 
-    /* Experience pane (always dark; fixes “broken / washed out” feeling) */
+    /* Experience pane (always dark) */
     .pane{
       border-radius: 22px;
       background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
@@ -141,7 +143,6 @@
     .pane.mode-form #chatWrap{display:none !important;}
     .pane.mode-form #formWrap{display:block !important;}
 
-    /* Chat / Form wrappers sit above the dark background */
     #chatWrap, #formWrap{position:relative; z-index:1; height:100%;}
 
     /* Chat */
@@ -182,9 +183,9 @@
 
     .composer{height:76px;border-top:1px solid var(--pLine);background: rgba(255,255,255,.04);padding:12px 14px calc(12px + env(safe-area-inset-bottom));}
 
-    /* Chips (make them read like real buttons) */
+    /* Chips */
     .chips{display:flex; gap:10px; flex-wrap:wrap}
-    .chips.segment{display:grid; grid-template-columns:repeat(3, 1fr); gap:12px}
+    .chips.segment{display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:12px}
 
     .chip{
       -webkit-appearance:none;appearance:none;
@@ -202,13 +203,11 @@
       font-size:16px;
       white-space:nowrap;
       cursor:pointer;
-      box-shadow:none;
       transition: transform .05s ease, background .16s ease, border-color .16s ease;
       -webkit-tap-highlight-color: transparent;
     }
     .chip:hover{background: rgba(255,255,255,.11)}
     .chip:active{transform: translateY(1px)}
-
     .chip.primary{background: rgba(37,99,235,.85); border-color: transparent; color:#fff;}
     .chip.ghost{background: transparent; border-color: rgba(255,255,255,.12);}
 
@@ -250,7 +249,7 @@
     .row b{color:var(--pText)}
     .sep{height:1px; background: rgba(255,255,255,.10); margin:6px 0}
 
-    .due{margin-top:10px; display:flex; align-items:center; justify-content:space-between; gap:10px; border-radius:16px; border:1px solid rgba(22,163,74,.28); background: rgba(22,163,74,.10); padding:10px 12px;}
+    .due{margin-top:10px; display:flex; align-items:center; justify-content:space-between; gap:10px; border-radius:16px; border:1px solid rgba(37,99,235,.28); background: rgba(37,99,235,.12); padding:10px 12px;}
     .due .k{color:var(--pMuted); font-size:12px; font-weight:800}
     .due .v{font-weight:1000; font-size:16px; color:var(--pText)}
 
@@ -263,6 +262,11 @@
     .toast{position:fixed;left:50%;bottom: calc(22px + env(safe-area-inset-bottom));transform:translateX(-50%);display:none;gap:10px;align-items:center;padding:10px 14px;border-radius:999px;border:1px solid var(--line);background: var(--card);box-shadow: var(--shadow2);color:var(--text);font-size:13px;z-index:50;}
     .toast.show{display:flex; animation: pop .18s ease-out}
     @keyframes pop{from{transform:translateX(-50%) translateY(6px); opacity:0} to{transform:translateX(-50%) translateY(0); opacity:1}}
+
+    @media (max-width:420px){
+      .phone{padding:14px}
+      .chips.segment{grid-template-columns:1fr}
+    }
   </style>
 </head>
 <body>
@@ -270,14 +274,14 @@
     <header>
       <div class="brand">
         <div class="mark">P</div>
-        <div>payform<small>booking link → deposit</small></div>
+        <div>payform<small>booking link → payment</small></div>
       </div>
       <button class="btn primary" id="cta" type="button">Create link</button>
     </header>
 
     <section class="hero">
-      <h1>One link. Paid booking.</h1>
-      <div class="sub">Client picks a package, chooses a time, sees the invoice, pays the deposit.</div>
+      <h1>One link. Paid call or deposit.</h1>
+      <div class="sub">Client answers a few questions, picks the right offer, books a time, pays—done.</div>
 
       <div class="linkbar" role="group" aria-label="Booking link">
         <input id="linkInput" value="https://payform.com/book/yourname" aria-label="Your booking link" />
@@ -285,7 +289,7 @@
       </div>
 
       <div class="micro" aria-label="Trust">
-        <span>Secure checkout</span><span class="dot"></span><span>Powered by Stripe</span><span class="dot"></span><span>Apple Pay</span><span class="dot"></span><span>Cards</span>
+        <span>Secure checkout</span><span class="dot"></span><span>Receipt</span><span class="dot"></span><span>Calendar invite</span><span class="dot"></span><span>Instant notify</span><span class="dot"></span><span>Powered by Stripe</span>
       </div>
     </section>
 
@@ -293,9 +297,12 @@
       <div class="phone">
         <div class="topbar">
           <div class="left"><div class="lock">🔒</div><div>payform</div></div>
-          <div class="viewToggle" aria-label="View mode">
-            <button class="vt on" id="modeChat" type="button">Chat</button>
-            <button class="vt" id="modeForm" type="button">Form</button>
+          <div class="center">
+            <div class="viewToggle" aria-label="View mode" title="Same steps. Different layout.">
+              <button class="vt on" id="modeChat" type="button">Chat</button>
+              <button class="vt" id="modeForm" type="button">Form</button>
+            </div>
+            <div class="tnote">Same steps • choose layout</div>
           </div>
           <div>Secure</div>
         </div>
@@ -357,12 +364,25 @@
       showToast('Client preview');
     });
 
-    const pkgs = [
-      {name:'Mini', meta:'1h • 15 edits', price:250, deposit:100},
-      {name:'Standard', meta:'2h • 35 edits', price:450, deposit:150},
-      {name:'Premium', meta:'Half-day • 80 edits', price:850, deposit:250}
+    // Wedge: coaches + consultants. Two flows: paid session OR project deposit.
+    const flows = [
+      'Paid Strategy Call',
+      'Project Deposit'
     ];
-    const intents = ['Photoshoot','Consultation','Other'];
+
+    const offers = {
+      'Paid Strategy Call': [
+        {name:'Starter Call', meta:'30 min • focused', price:150, deposit:150},
+        {name:'Deep Dive', meta:'60 min • roadmap', price:300, deposit:300},
+        {name:'Audit + Plan', meta:'90 min • doc', price:450, deposit:450}
+      ],
+      'Project Deposit': [
+        {name:'Sprint', meta:'4 weeks • hands-on', price:2000, deposit:500},
+        {name:'Systems Setup', meta:'2 weeks • build', price:1500, deposit:400},
+        {name:'Retainer', meta:'Monthly • priority', price:3000, deposit:1000}
+      ]
+    };
+
     const dates = ['Fri 26','Sat 27','Sun 28'];
     const times = ['10:00','11:00','12:00'];
 
@@ -405,15 +425,33 @@
     modeChatBtn.addEventListener('click', ()=>setMode('chat'));
     modeFormBtn.addEventListener('click', ()=>setMode('form'));
 
-    let step = 0; // 0 intake, 1 package, 2 schedule, 3 invoice, 4 done
-    let s = { intent:'', name:'', email:'', notes:'', pkg: pkgs[0].name, date: dates[0], time: times[0], paid:false };
+    let step = 0; // 0 intake, 1 offer, 2 schedule, 3 invoice, 4 done
+    let s = {
+      flow:'',
+      name:'',
+      email:'',
+      notes:'',
+      pkg:'',
+      date: dates[0],
+      time: times[0],
+      paid:false
+    };
 
     function esc(str){ return (str||'').replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
     function money(n){ return '$' + Number(n).toFixed(0); }
-    function pkg(){ return pkgs.find(p=>p.name===s.pkg) || pkgs[0]; }
-    function total(){ return pkg().price; }
-    function deposit(){ return pkg().deposit; }
-    function remaining(){ return Math.max(0, total() - deposit()); }
+
+    function currentOffers(){
+      return offers[s.flow] || [];
+    }
+    function pkg(){
+      const list = currentOffers();
+      return list.find(p=>p.name===s.pkg) || list[0];
+    }
+    function total(){ return pkg()?.price || 0; }
+    function dueNow(){ return pkg()?.deposit || 0; }
+    function remaining(){ return Math.max(0, total() - dueNow()); }
+    function isDepositFlow(){ return remaining() > 0; }
+    function dueLabel(){ return isDepositFlow() ? 'Deposit' : 'Session fee'; }
 
     function setDots(){
       const fills = [0,0,0,0,0];
@@ -472,7 +510,7 @@
     function inputUI(placeholder, key, nextLabel='Continue', allowSkip=true){
       setComposerHTML(`
         <div class="chips" style="display:flex; gap:10px; align-items:center;">
-          <input class="input" id="in" placeholder="${esc(placeholder)}" style="flex:1; height:48px; border-radius:16px; border:1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06); color: var(--pText); padding:0 12px; font-weight:850;" />
+          <input id="in" placeholder="${esc(placeholder)}" style="flex:1; height:48px; border-radius:16px; border:1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06); color: var(--pText); padding:0 12px; font-weight:850;" />
           ${chip(nextLabel,'primary','id="go"')}
         </div>
         <div class="chips" style="margin-top:10px;">${allowSkip ? chip('Skip','ghost','id="skip"') : ''}</div>
@@ -494,10 +532,18 @@
       skip?.addEventListener('click', ()=>{ addMsg('user','Skip'); next(); });
     }
 
-    function packagesUI(){
+    function offersUI(){
+      const list = currentOffers();
+      if(!list.length){
+        setComposerHTML(`<div class="chips">${chip('Restart','ghost','id="r"')}</div>`);
+        composer.querySelector('#r')?.addEventListener('click', ()=>start(true));
+        return;
+      }
+      if(!s.pkg) s.pkg = list[0].name;
+
       setComposerHTML(`
         <div style="display:grid; gap:10px;">
-          ${pkgs.map(p=>{
+          ${list.map(p=>{
             const on = (s.pkg===p.name)
               ? 'style="border-color: rgba(37,99,235,.45); background: rgba(37,99,235,.18);"'
               : '';
@@ -518,7 +564,7 @@
       composer.querySelectorAll('[data-pkg]').forEach(el=>{
         el.addEventListener('click', ()=>{
           s.pkg = el.getAttribute('data-pkg');
-          packagesUI();
+          offersUI();
         });
       });
       composer.querySelector('#go')?.addEventListener('click', ()=>{ addMsg('user', esc(s.pkg)); next(); });
@@ -560,6 +606,9 @@
 
     function invoiceUI(){
       const p = pkg();
+      const label = dueLabel();
+      const detail = isDepositFlow() ? 'Deposit applied to total' : 'No surprises';
+
       addMsg('bot', `
         <div style="font-weight:950; font-size:14px;">Invoice</div>
         <div class="invoice">
@@ -569,25 +618,26 @@
           <div class="due">
             <div>
               <div class="k">Due now</div>
-              <div style="font-weight:950; margin-top:2px;">Deposit</div>
+              <div style="font-weight:950; margin-top:2px; color:var(--pText)">${esc(label)}</div>
             </div>
-            <div class="v">${money(deposit())}</div>
+            <div class="v">${money(dueNow())}</div>
           </div>
           <div class="row"><span>Remaining</span><b>${money(remaining())}</b></div>
         </div>
-        <div class="policy"><span>Reschedule 72h</span><span class="dot"></span><span>Deposit applied</span></div>
+        <div class="policy"><span>Receipt</span><span class="dot"></span><span>Calendar invite</span><span class="dot"></span><span>${esc(detail)}</span></div>
+        <div class="policy" style="margin-top:8px;"><span>Reschedule 24h</span><span class="dot"></span><span>Instant confirm</span></div>
       `);
 
       setComposerHTML(`
         <div class="chips">
-          ${chip('Pay deposit','primary','id="pay"')}
+          ${chip(isDepositFlow() ? 'Pay deposit' : 'Pay now','primary','id="pay"')}
           ${chip('Back','ghost','id="back"')}
         </div>
       `);
 
       composer.querySelector('#back')?.addEventListener('click', ()=>back());
       composer.querySelector('#pay')?.addEventListener('click', ()=>{
-        addMsg('user', 'Pay deposit');
+        addMsg('user', isDepositFlow() ? 'Pay deposit' : 'Pay now');
         showToast('Paid');
         s.paid = true;
         next();
@@ -597,20 +647,17 @@
     function doneUI(){
       const p = pkg();
       addMsg('bot', `Booked ✅<div class="mut">${esc(p.name)} • ${esc(s.date)} • ${esc(s.time)}</div>`);
-      addMsg('bot', `
-        <div class="policy" style="margin-top:0;"><span>Receipt</span><span class="dot"></span><span>Calendar invite</span><span class="dot"></span><span>Follow-up 24h</span></div>
-      `);
-
+      addMsg('bot', `<div class="policy" style="margin-top:0;"><span>Receipt sent</span><span class="dot"></span><span>Invite sent</span><span class="dot"></span><span>Coach notified</span></div>`);
       setComposerHTML(`<div class="chips">${chip('Restart','ghost','id="r"')}${chip('Done','primary','id="d"')}</div>`);
       composer.querySelector('#r')?.addEventListener('click', ()=>start(true));
       composer.querySelector('#d')?.addEventListener('click', ()=>showToast('Done'));
     }
 
     /* ---------------- FORM WIZARD ---------------- */
-    let formStep = 0; // 0 type, 1 details, 2 package, 3 schedule, 4 invoice, 5 done
+    let formStep = 0; // 0 flow, 1 details, 2 offer, 3 schedule, 4 invoice, 5 done
 
     function guessFormStep(){
-      if(!s.intent) return 0;
+      if(!s.flow) return 0;
       if(!s.name || !s.email) return 1;
       if(!s.pkg) return 2;
       if(!s.date || !s.time) return 3;
@@ -652,12 +699,12 @@
 
       if(formStep === 0){
         body = `
-          <div class="formLabel">What are we booking?</div>
+          <div class="formLabel">Choose a flow</div>
           <div class="chips segment" style="margin-top:10px;">
-            ${intents.map(v=>chip(v,'',`data-int="${esc(v)}"`)).join('')}
+            ${flows.map(v=>chip(v,'',`data-flow="${esc(v)}"`)).join('')}
           </div>
         `;
-        nextEnabled = !!s.intent;
+        nextEnabled = !!s.flow;
       }
 
       if(formStep === 1){
@@ -666,13 +713,15 @@
             <div class="field"><div class="formLabel">Name</div><input id="fName" value="${esc(s.name)}" placeholder="Name" /></div>
             <div class="field"><div class="formLabel">Email</div><input id="fEmail" value="${esc(s.email)}" placeholder="you@domain.com" /></div>
           </div>
-          <div class="field" style="margin-top:10px;"><div class="formLabel">Note</div><textarea id="fNotes" placeholder="Optional">${esc(s.notes)}</textarea></div>
+          <div class="field" style="margin-top:10px;"><div class="formLabel">Goal (optional)</div><textarea id="fNotes" placeholder="What do you want help with?">${esc(s.notes)}</textarea></div>
         `;
         nextEnabled = !!(s.name && s.email);
       }
 
       if(formStep === 2){
-        const pkgCards = pkgs.map(pp=>{
+        const list = currentOffers();
+        if(!s.pkg && list.length) s.pkg = list[0].name;
+        const cards = list.map(pp=>{
           const on = (pp.name===s.pkg) ? 'style="border-color: rgba(37,99,235,.45); background: rgba(37,99,235,.18);"' : '';
           return `
             <div class="opt" data-fpkg="${esc(pp.name)}" ${on}>
@@ -681,7 +730,7 @@
             </div>
           `;
         }).join('');
-        body = `<div style="display:grid; gap:10px;">${pkgCards}</div>`;
+        body = `<div style="display:grid; gap:10px;">${cards}</div>`;
         nextEnabled = !!s.pkg;
       }
 
@@ -696,16 +745,18 @@
       }
 
       if(formStep === 4){
+        const label = dueLabel();
+        const detail = isDepositFlow() ? 'Deposit applied to total' : 'No surprises';
         body = `
           <div class="invoice">
             <div class="row"><span>${esc(p.name)}</span><b>${money(p.price)}</b></div>
             <div class="sep"></div>
             <div class="row"><span>Total</span><b>${money(total())}</b></div>
-            <div class="due"><div><div class="k">Due now</div><div style="font-weight:950; margin-top:2px; color:var(--pText)">Deposit</div></div><div class="v">${money(deposit())}</div></div>
+            <div class="due"><div><div class="k">Due now</div><div style="font-weight:950; margin-top:2px; color:var(--pText)">${esc(label)}</div></div><div class="v">${money(dueNow())}</div></div>
             <div class="row"><span>Remaining</span><b>${money(remaining())}</b></div>
-            <div class="policy"><span>Instant receipt</span><span class="dot"></span><span>Calendar invite</span></div>
-            <div style="margin-top:10px;"><button class="payBtn" id="fPay" type="button">Pay deposit</button></div>
-            <div class="policy"><span>Reschedule 72h</span><span class="dot"></span><span>Deposit applied</span></div>
+            <div class="policy"><span>Receipt</span><span class="dot"></span><span>Invite</span><span class="dot"></span><span>${esc(detail)}</span></div>
+            <div style="margin-top:10px;"><button class="payBtn" id="fPay" type="button">${isDepositFlow() ? 'Pay deposit' : 'Pay now'}</button></div>
+            <div class="policy"><span>Reschedule 24h</span><span class="dot"></span><span>Instant notify</span></div>
           </div>
         `;
         nextEnabled = false;
@@ -713,7 +764,7 @@
 
       if(formStep === 5){
         body = `
-          <div class="policy" style="margin-top:0;"><span>Receipt</span><span class="dot"></span><span>Calendar invite</span><span class="dot"></span><span>Follow-up 24h</span></div>
+          <div class="policy" style="margin-top:0;"><span>Receipt sent</span><span class="dot"></span><span>Invite sent</span><span class="dot"></span><span>Coach notified</span></div>
           <div class="chips" style="margin-top:14px;">${chip('Restart','ghost','id="fRestart"')}${chip('Done','primary','id="fDone"')}</div>
         `;
       }
@@ -739,7 +790,12 @@
       setFormProg();
 
       // binds
-      formWrap.querySelectorAll('[data-int]').forEach(b=>b.addEventListener('click', ()=>{ s.intent=b.getAttribute('data-int'); setFormStep(1); }));
+      formWrap.querySelectorAll('[data-flow]').forEach(b=>b.addEventListener('click', ()=>{
+        s.flow = b.getAttribute('data-flow');
+        s.pkg = '';
+        setFormStep(1);
+      }));
+
       formWrap.querySelectorAll('[data-fpkg]').forEach(el=>el.addEventListener('click', ()=>{ s.pkg=el.getAttribute('data-fpkg'); renderForm(); }));
       formWrap.querySelectorAll('[data-date2]').forEach(b=>b.addEventListener('click', ()=>{ s.date=b.getAttribute('data-date2'); renderForm(); }));
       formWrap.querySelectorAll('[data-time2]').forEach(b=>b.addEventListener('click', ()=>{ s.time=b.getAttribute('data-time2'); renderForm(); }));
@@ -763,43 +819,43 @@
     }
 
     /* ---------------- CHAT FLOW ---------------- */
-    let stage = 'intent';
+    let stage = 'flow';
 
     function start(resetAll=false){
       if(resetAll){
         chat.innerHTML = '';
         step = 0;
-        s = {intent:'', name:'', email:'', notes:'', pkg:pkgs[0].name, date:dates[0], time:times[0], paid:false};
-        stage = 'intent';
+        s = { flow:'', name:'', email:'', notes:'', pkg:'', date:dates[0], time:times[0], paid:false };
+        stage = 'flow';
       }
       setDots();
-      bot('Hi — what are we booking?');
-      chipsUI(intents, (v)=>{ s.intent=v; addMsg('user', esc(v)); next(); }, 'segment');
+      bot('Hi — what are we doing today?');
+      chipsUI(flows, (v)=>{ s.flow=v; addMsg('user', esc(v)); next(); }, 'segment');
       if(uiMode==='form') renderForm();
     }
 
     function back(){
       showToast('Back');
       if(stage === 'invoice' || stage === 'time' || stage === 'date'){
-        stage = 'package';
+        stage = 'offer';
         step = 1;
         setDots();
-        bot('Pick a package');
-        packagesUI();
+        bot('Pick an offer');
+        offersUI();
         return;
       }
-      stage = 'intent';
+      stage = 'flow';
       step = 0;
       setDots();
-      bot('What are we booking?');
-      chipsUI(intents, (v)=>{ s.intent=v; addMsg('user', esc(v)); next(); }, 'segment');
+      bot('What are we doing today?');
+      chipsUI(flows, (v)=>{ s.flow=v; addMsg('user', esc(v)); next(); }, 'segment');
     }
 
     function next(){
-      if(stage === 'intent'){
+      if(stage === 'flow'){
         stage = 'name';
         step = 0; setDots();
-        bot('Name?');
+        bot('A few quick questions, then checkout. Name?');
         inputUI('Name', 'name', 'Continue', true);
         return;
       }
@@ -815,31 +871,31 @@
       if(stage === 'email'){
         stage = 'notes';
         step = 0; setDots();
-        bot('Anything to note?');
-        chipsUI(['No','Add note'], (v)=>{
+        bot('Goal for this session?');
+        chipsUI(['Skip','Add goal'], (v)=>{
           addMsg('user', esc(v));
-          if(v==='Add note'){
-            inputUI('Short note', 'notes', 'Save', true);
+          if(v==='Add goal'){
+            inputUI('One sentence', 'notes', 'Save', true);
           }else{
             s.notes='';
-            stage = 'package';
+            stage = 'offer';
             step = 1; setDots();
-            bot('Pick a package');
-            packagesUI();
+            bot('Pick an offer');
+            offersUI();
           }
         });
         return;
       }
 
       if(stage === 'notes'){
-        stage = 'package';
+        stage = 'offer';
         step = 1; setDots();
-        bot('Pick a package');
-        packagesUI();
+        bot('Pick an offer');
+        offersUI();
         return;
       }
 
-      if(stage === 'package'){
+      if(stage === 'offer'){
         stage = 'date';
         step = 2; setDots();
         bot('Date?');
@@ -892,6 +948,13 @@
       setMode('form');
       assert(formWrap.querySelector('.formShell'), 'form shell missing');
       assert(formWrap.querySelectorAll('[data-fw]').length === 5, 'form progress bars missing');
+
+      // Offer routing should work
+      s.flow = flows[0];
+      s.pkg = '';
+      renderForm();
+      const someOffer = (offers[flows[0]]||[])[0];
+      assert(!!someOffer, 'offers missing');
 
       // Restore
       start(true);
