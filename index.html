@@ -1,0 +1,1220 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Payform — One link. Paid booking.</title>
+  <style>
+    :root{
+      --bg:#ffffff;
+      --text:#0b1220;
+      --muted:#667085;
+      --line:#e9eef6;
+      --soft:#eef3fb;
+      --heroCut: clamp(320px, 42vh, 520px);
+      --card:#ffffff;
+      --blue:#2563eb;
+      --green:#16a34a;
+      --shadow:0 24px 70px rgba(11,18,32,.08);
+      --shadow2:0 14px 40px rgba(11,18,32,.06);
+      --focus: 0 0 0 4px rgba(37,99,235,.16);
+      --chipShadow: 0 10px 24px rgba(11,18,32,.06);
+    }
+
+    @media (prefers-color-scheme: dark){
+      :root{
+        --bg:#070b14;
+        --text:#e8ecf7;
+        --muted:#a7b0c5;
+        --line:#182034;
+        --soft:#0b1120;
+        --heroCut: clamp(320px, 42vh, 520px);
+        --card:#0b1120;
+        --shadow:0 28px 80px rgba(0,0,0,.45);
+        --shadow2:0 16px 44px rgba(0,0,0,.35);
+        --focus: 0 0 0 4px rgba(37,99,235,.22);
+        --chipShadow: 0 10px 26px rgba(0,0,0,.35);
+      }
+
+      .phone{background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));}
+      .linkbar{background: rgba(255,255,255,.04);}
+      .copy{background: rgba(255,255,255,.06);}
+      .bub{background: rgba(255,255,255,.06);}
+      .msg.user .bub{background: rgba(37,99,235,.18); border-color: rgba(37,99,235,.26);}
+      .chip{background: rgba(255,255,255,.06);}
+      .chip:hover{background: rgba(255,255,255,.09);}
+      .input{background: rgba(255,255,255,.06);}
+      .opt{background: rgba(255,255,255,.05);}
+      .invoice{background: rgba(255,255,255,.03);}
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      /* subtle section break: hero stays white, stage sits on a soft canvas */
+      background:
+        radial-gradient(900px 520px at 50% 86%, rgba(37,99,235,.10), transparent 62%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg) var(--heroCut), var(--soft) var(--heroCut), var(--soft) 100%);
+      color:var(--text);
+      letter-spacing:-0.01em;
+    }
+
+    .wrap{max-width:1040px; margin:0 auto; padding:26px 18px 72px}
+
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:8px 2px 28px;
+    }
+
+    .brand{display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:-0.02em}
+    .mark{
+      width:40px; height:40px; border-radius:12px;
+      background: rgba(37,99,235,.10);
+      border:1px solid rgba(37,99,235,.18);
+      display:grid; place-items:center;
+      color:var(--blue);
+      font-size:16px;
+    }
+    .brand small{display:block; margin-top:2px; color:var(--muted); font-weight:700; font-size:12px}
+
+    .btn{
+      height:42px;
+      padding:0 14px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:transparent;
+      color:var(--text);
+      font-weight:750;
+      cursor:pointer;
+      transition: transform .05s ease, background .16s ease, border-color .16s ease;
+    }
+    .btn:hover{background:rgba(120,135,170,.08)}
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{background:var(--blue); border-color:transparent; color:#fff; box-shadow: 0 14px 34px rgba(37,99,235,.18)}
+    .btn.primary:hover{filter:brightness(.98)}
+    .btn:focus{outline:none; box-shadow:var(--focus)}
+
+    .hero{padding:6px 0 18px; text-align:center}
+    h1{margin:0; font-size: clamp(34px, 4.6vw, 56px); line-height:1.05; letter-spacing:-0.03em}
+    .sub{margin:12px auto 0; max-width: 720px; color:var(--muted); line-height:1.6; font-size:16px}
+
+    .linkbar{
+      margin:18px auto 0;
+      max-width: 780px;
+      padding:10px;
+      border-radius: 16px;
+      border:1px solid var(--line);
+      background: var(--soft);
+      display:flex; align-items:center; gap:10px;
+    }
+    .linkbar input{
+      flex:1;
+      border:0;
+      background:transparent;
+      font-size:14px;
+      color:var(--text);
+      padding:10px 8px;
+      outline:none;
+      min-width: 210px;
+    }
+    .copy{
+      height:40px;
+      padding:0 14px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:var(--card);
+      cursor:pointer;
+      font-weight:800;
+    }
+    .copy:hover{background:rgba(120,135,170,.08)}
+
+    .micro{
+      margin:10px auto 0;
+      max-width: 780px;
+      display:flex; align-items:center; justify-content:center;
+      gap:10px; flex-wrap:wrap;
+      color:var(--muted);
+      font-size:12px;
+    }
+    .dot{width:4px; height:4px; border-radius:99px; background:rgba(120,135,170,.55)}
+
+    .stage{margin-top:34px; display:flex; justify-content:center}
+
+    .phone{
+      width:min(460px, 100%);
+      border-radius: 30px;
+      border:1px solid var(--line);
+      background: linear-gradient(180deg, rgba(246,248,252,.92), rgba(246,248,252,.60));
+      padding:16px;
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:6px 6px 12px;
+      color:var(--muted);
+      font-size:12px;
+      gap:10px;
+    }
+    .topbar .left{display:flex; align-items:center; gap:8px; min-width: 120px}
+
+    .viewToggle{
+      display:inline-grid;
+      grid-template-columns:1fr 1fr;
+      gap:6px;
+      padding:6px;
+      border-radius: 999px;
+      border:1px solid var(--line);
+      background: rgba(120,135,170,.08);
+      box-shadow: 0 10px 22px rgba(11,18,32,.06);
+    }
+    .vt{
+      border:1px solid transparent;
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-weight:900;
+      font-size:12px;
+      height:30px;
+      padding:0 12px;
+      border-radius: 999px;
+      cursor:pointer;
+      transition: background .16s ease, color .16s ease, transform .05s ease;
+      -webkit-tap-highlight-color: transparent;
+      white-space: nowrap;
+    }
+    .vt:hover{background: rgba(120,135,170,.10)}
+    .vt:active{transform: translateY(1px)}
+    .vt.on{
+      background: var(--card);
+      color: var(--text);
+      border-color: rgba(120,135,170,.18);
+      box-shadow: 0 10px 22px rgba(11,18,32,.08);
+    }
+    .vt:focus{outline:none; box-shadow: var(--focus)}
+
+    .lock{width:18px; height:18px; border-radius:8px; display:grid; place-items:center; border:1px solid var(--line); background:rgba(120,135,170,.10)}
+
+    /* Form mode */
+    .formWrap{display:none; flex:1; min-height:0; overflow:hidden; padding:0;}
+    .formShell{height:100%; display:flex; flex-direction:column; min-height:0;}
+    .formTop{padding:14px 14px 10px; border-bottom:1px solid var(--line); background: var(--card);}
+
+    .fwProg{display:flex; gap:8px; align-items:center; justify-content:center;}
+    .fwBar{flex:1; height:6px; border-radius:999px; border:1px solid var(--line); background: rgba(120,135,170,.10); overflow:hidden;}
+    .fwBar i{display:block; height:100%; width:0%; background: rgba(37,99,235,.85); border-radius:999px; transition: width .2s ease;}
+
+    .formBody{flex:1; min-height:0; overflow:auto; padding:14px; scrollbar-width:none;}
+    .formBody::-webkit-scrollbar{width:0;height:0}
+
+    .formSection{display:grid; gap:10px; padding:6px 0}
+    .formLabel{color:var(--muted); font-size:12px; font-weight:900; letter-spacing:-.01em}
+    .grid2{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+
+    .field{
+      border:1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(120,135,170,.06);
+      padding:12px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+    .field input, .field textarea{
+      width:100%;
+      border:0;
+      outline:none;
+      background: transparent;
+      color: var(--text);
+      font: inherit;
+      font-weight:800;
+      font-size:14px;
+      resize:none;
+    }
+    .field textarea{min-height:44px}
+
+    .miniRow{display:flex; align-items:center; gap:8px; flex-wrap:wrap; justify-content:flex-start}
+    .miniPill{
+      border:1px solid var(--line);
+      background: rgba(120,135,170,.08);
+      border-radius: 999px;
+      padding:8px 10px;
+      font-size:12px;
+      font-weight:900;
+      color: var(--text);
+      cursor:pointer;
+      transition: background .16s ease, border-color .16s ease, transform .05s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .miniPill:hover{background: rgba(120,135,170,.10)}
+    .miniPill:active{transform: translateY(1px)}
+    .miniPill.on{background: rgba(37,99,235,.12); border-color: rgba(37,99,235,.22)}
+
+    .formFooter{
+      padding:12px 14px calc(12px + env(safe-area-inset-bottom));
+      border-top:1px solid var(--line);
+      background: var(--card);
+      display:flex;
+      gap:10px;
+    }
+    .fbtn{
+      flex:1;
+      height:44px;
+      border-radius: 16px;
+      border:1px solid var(--line);
+      background: rgba(120,135,170,.06);
+      color: var(--text);
+      font-weight:950;
+      cursor:pointer;
+      transition: transform .05s ease, background .16s ease, border-color .16s ease;
+    }
+    .fbtn:hover{background: rgba(120,135,170,.10)}
+    .fbtn:active{transform: translateY(1px)}
+    .fbtn:focus{outline:none; box-shadow: var(--focus)}
+    .fbtn.primary{background: var(--blue); border-color: transparent; color:#fff; box-shadow: 0 16px 40px rgba(37,99,235,.20)}
+    .fbtn.primary:hover{filter:brightness(.98)}
+    .fbtn:disabled{opacity:.45; cursor:not-allowed; transform:none}
+
+    .subtleCard{
+      border:1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(120,135,170,.04);
+      padding:12px;
+    }
+
+    .payBtn{
+      width:100%;
+      height:46px;
+      border-radius: 16px;
+      border:1px solid transparent;
+      background: var(--blue);
+      color:#fff;
+      font-weight:950;
+      font-size:14px;
+      cursor:pointer;
+      box-shadow: 0 16px 40px rgba(37,99,235,.20);
+      transition: transform .05s ease, filter .16s ease;
+    }
+    .payBtn:active{transform: translateY(1px)}
+    .payBtn:hover{filter:brightness(.98)}
+    .payBtn:focus{outline:none; box-shadow: var(--focus)}
+
+    .dots{display:flex; gap:8px; padding:0 6px 14px}
+    .pdot{
+      flex:1;
+      height:6px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background: rgba(120,135,170,.12);
+      overflow:hidden;
+    }
+    .pdot > i{display:block; height:100%; width:0%; background: rgba(37,99,235,.85); border-radius:999px; transition: width .25s ease}
+
+    .pane{
+      border-radius: 22px;
+      background: var(--card);
+      border:1px solid var(--line);
+      box-shadow: var(--shadow2);
+      display:flex;
+      flex-direction:column;
+      height: min(560px, 66vh);
+      min-height: 420px;
+      overflow:hidden;
+    }
+
+    .chat{
+      flex:1;
+      min-height:0;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      padding:14px;
+      overflow:auto;
+      scrollbar-width: none;
+    }
+    .chat::-webkit-scrollbar{width:0;height:0}
+
+    .msg{display:flex;}
+    .msg.bot{justify-content:flex-start;}
+    .msg.user{justify-content:flex-end;}
+
+    .bub{
+      max-width: 86%;
+      border:1px solid var(--line);
+      border-radius: 16px;
+      padding:10px 12px;
+      background: rgba(120,135,170,.06);
+      color: var(--text);
+      font-size:14px;
+      line-height:1.45;
+    }
+    .msg.user .bub{
+      background: rgba(37,99,235,.10);
+      border-color: rgba(37,99,235,.20);
+    }
+    .mut{color:var(--muted); font-size:12px; margin-top:6px; line-height:1.45}
+
+    .typing{
+      display:inline-flex;
+      gap:6px;
+      align-items:center;
+      padding:10px 12px;
+      border-radius: 16px;
+      border:1px solid var(--line);
+      background: rgba(120,135,170,.06);
+      width: fit-content;
+    }
+    .typing i{width:6px;height:6px;border-radius:99px;background:rgba(120,135,170,.65);display:inline-block;animation: blink 1.1s infinite}
+    .typing i:nth-child(2){animation-delay:.15s}
+    .typing i:nth-child(3){animation-delay:.30s}
+    @keyframes blink{0%,100%{opacity:.35}50%{opacity:1}}
+
+    .composer{
+      flex:none;
+      border-top:1px solid var(--line);
+      background: var(--card);
+      padding:12px 14px calc(12px + env(safe-area-inset-bottom));
+    }
+
+    .chips{display:flex; gap:10px; flex-wrap:wrap}
+    .chips.segment{display:grid; grid-template-columns:repeat(3, 1fr); gap:10px}
+
+    .chip{
+      -webkit-appearance:none;
+      appearance:none;
+      font: inherit;
+      color: var(--text);
+      border:1px solid var(--line);
+      background: rgba(120,135,170,.06);
+      border-radius: 999px;
+      padding: 0 14px;
+      height:44px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:900;
+      font-size:14px;
+      white-space:nowrap;
+      cursor:pointer;
+      box-shadow: var(--chipShadow);
+      transition: transform .05s ease, background .16s ease, border-color .16s ease, box-shadow .16s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .chips.segment .chip{width:100%}
+
+    .chip:hover{background: rgba(120,135,170,.10)}
+    .chip:active{transform: translateY(1px)}
+    .chip:focus{outline:none; box-shadow: var(--chipShadow), var(--focus)}
+
+    .chip.primary{background: var(--blue); border-color: transparent; color:#fff; box-shadow: 0 18px 40px rgba(37,99,235,.22)}
+    .chip.primary:hover{filter:brightness(.98)}
+    .chip.ghost{background: transparent; box-shadow:none}
+
+    .inputRow{display:flex; gap:10px; align-items:center}
+    .input{
+      flex:1;
+      border:1px solid var(--line);
+      border-radius: 14px;
+      padding:12px 12px;
+      background: rgba(120,135,170,.06);
+      font-size:14px;
+      color: var(--text);
+      outline:none;
+      height:44px;
+    }
+    .input:focus{box-shadow: var(--focus)}
+
+    .opts{display:grid; gap:10px}
+    .opt{
+      border:1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(120,135,170,.06);
+      padding:12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      cursor:pointer;
+      transition: background .16s ease, border-color .16s ease, transform .05s ease;
+    }
+    .opt:hover{background: rgba(120,135,170,.10)}
+    .opt:active{transform: translateY(1px)}
+    .opt .l{display:flex; flex-direction:column; gap:3px}
+    .opt .l strong{font-weight:950}
+    .opt .l small{color:var(--muted); font-weight:700}
+    .opt .r{font-weight:950}
+
+    .invoice{
+      border:1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(120,135,170,.04);
+      padding:12px;
+      margin-top:6px;
+    }
+    .row{display:flex; align-items:center; justify-content:space-between; padding:8px 0; color:var(--muted); font-size:13px}
+    .row b{color:var(--text)}
+    .sep{height:1px; background:var(--line); margin:6px 0}
+    .due{
+      margin-top:10px;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px;
+      border-radius: 16px;
+      border:1px solid rgba(22,163,74,.22);
+      background: rgba(22,163,74,.08);
+      padding:10px 12px;
+    }
+    .due .k{color:var(--muted); font-size:12px; font-weight:800}
+    .due .v{font-weight:1000; font-size:16px}
+    .policy{
+      margin-top:10px;
+      display:flex; align-items:center; justify-content:center;
+      gap:10px;
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    .doneList{display:grid; gap:10px; margin-top:8px}
+    .doneItem{
+      border:1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(120,135,170,.06);
+      padding:12px;
+      display:flex; align-items:center; justify-content:space-between;
+      font-weight:950;
+    }
+    .doneItem span:last-child{color:var(--muted); font-weight:800}
+
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom: calc(22px + env(safe-area-inset-bottom));
+      transform:translateX(-50%);
+      display:none;
+      gap:10px;
+      align-items:center;
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background: var(--card);
+      box-shadow: var(--shadow2);
+      color:var(--text);
+      font-size:13px;
+      z-index:50;
+    }
+    .toast.show{display:flex; animation: pop .18s ease-out}
+    @keyframes pop{from{transform:translateX(-50%) translateY(6px); opacity:0} to{transform:translateX(-50%) translateY(0); opacity:1}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="mark">P</div>
+        <div>
+          payform
+          <small>booking link → deposit</small>
+        </div>
+      </div>
+      <button class="btn primary" id="cta" type="button">Create link</button>
+    </header>
+
+    <section class="hero">
+      <h1>One link. Paid booking.</h1>
+      <div class="sub">Client picks a package, chooses a time, sees the invoice, pays the deposit.</div>
+
+      <div class="linkbar" role="group" aria-label="Booking link">
+        <input id="linkInput" value="https://payform.com/book/yourname" aria-label="Your booking link" />
+        <button class="copy" id="copyBtn" type="button">Copy</button>
+      </div>
+
+      <div class="micro" aria-label="Trust">
+        <span>Secure checkout</span><span class="dot"></span><span>Powered by Stripe</span><span class="dot"></span><span>Apple Pay</span><span class="dot"></span><span>Cards</span>
+      </div>
+    </section>
+
+    <section class="stage" aria-label="Client experience">
+      <div class="phone">
+        <div class="topbar">
+          <div class="left">
+            <div class="lock">🔒</div>
+            <div>payform</div>
+          </div>
+
+          <div class="viewToggle" aria-label="View mode">
+            <button class="vt on" id="modeChat" type="button">Chat</button>
+            <button class="vt" id="modeForm" type="button">Form</button>
+          </div>
+
+          <div>Secure</div>
+        </div>
+
+        <div class="dots" aria-label="Progress">
+          <div class="pdot"><i id="d0"></i></div>
+          <div class="pdot"><i id="d1"></i></div>
+          <div class="pdot"><i id="d2"></i></div>
+          <div class="pdot"><i id="d3"></i></div>
+          <div class="pdot"><i id="d4"></i></div>
+        </div>
+
+        <div class="pane" aria-label="Conversation">
+          <div class="chatWrap" id="chatWrap" style="display:flex; flex:1; min-height:0; flex-direction:column;">
+            <div class="chat" id="chat" role="log" aria-live="polite" aria-relevant="additions"></div>
+            <div class="composer" id="composer" aria-label="Reply"></div>
+          </div>
+          <div class="formWrap" id="formWrap" aria-label="Form"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <span style="font-weight:950; color:var(--blue)">✓</span>
+    <span id="toastText">Copied</span>
+  </div>
+
+  <script>
+    // --- Tiny test helper (kept minimal for a prototype) ---
+    function assert(condition, message){
+      if(!condition) throw new Error(message || 'Assertion failed');
+    }
+
+    // Toast
+    const toast = document.getElementById('toast');
+    const toastText = document.getElementById('toastText');
+    let toastTimer;
+    function showToast(msg){
+      toastText.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(()=>toast.classList.remove('show'), 1200);
+    }
+
+    // Copy
+    const linkInput = document.getElementById('linkInput');
+    document.getElementById('copyBtn').addEventListener('click', async ()=>{
+      const t = linkInput.value;
+      try{ await navigator.clipboard.writeText(t); showToast('Copied'); }
+      catch(e){
+        const ta = document.createElement('textarea');
+        ta.value = t;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+        showToast('Copied');
+      }
+    });
+
+    document.getElementById('cta').addEventListener('click', ()=>{
+      document.querySelector('.phone').scrollIntoView({behavior:'smooth', block:'center'});
+      showToast('Client preview');
+    });
+
+    // Data
+    const pkgs = [
+      {name:'Mini', meta:'1h • 15 edits', price:250, deposit:100},
+      {name:'Standard', meta:'2h • 35 edits', price:450, deposit:150},
+      {name:'Premium', meta:'Half-day • 80 edits', price:850, deposit:250}
+    ];
+    const intents = ['Photoshoot','Consultation','Other'];
+    const dates = ['Fri 26','Sat 27','Sun 28'];
+    const times = ['10:00','11:00','12:00'];
+
+    // Elements
+    const chat = document.getElementById('chat');
+    const composer = document.getElementById('composer');
+    const chatWrap = document.getElementById('chatWrap');
+    const formWrap = document.getElementById('formWrap');
+
+    // View mode
+    const modeChatBtn = document.getElementById('modeChat');
+    const modeFormBtn = document.getElementById('modeForm');
+    let uiMode = 'chat';
+
+    function setMode(mode){
+      uiMode = mode;
+      const isChat = (mode === 'chat');
+      chatWrap.style.display = isChat ? 'flex' : 'none';
+      formWrap.style.display = isChat ? 'none' : 'block';
+      modeChatBtn.classList.toggle('on', isChat);
+      modeFormBtn.classList.toggle('on', !isChat);
+      if(!isChat){
+        setFormStep(guessFormStep());
+      }
+    }
+
+    modeChatBtn.addEventListener('click', ()=>setMode('chat'));
+    modeFormBtn.addEventListener('click', ()=>setMode('form'));
+
+    // State
+    let step = 0; // 0 intake, 1 package, 2 schedule, 3 invoice, 4 done
+    let s = {
+      intent:'',
+      name:'',
+      email:'',
+      notes:'',
+      pkg: pkgs[0].name,
+      date: dates[0],
+      time: times[0],
+      paid:false
+    };
+
+    function esc(str){
+      return (str||'').replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+    }
+    function money(n){ return '$' + Number(n).toFixed(0); }
+    function pkg(){ return pkgs.find(p=>p.name===s.pkg) || pkgs[0]; }
+    function total(){ return pkg().price; }
+    function deposit(){ return pkg().deposit; }
+    function remaining(){ return Math.max(0, total() - deposit()); }
+
+    // --- Form wizard ---
+    let formStep = 0; // 0 type, 1 details, 2 package, 3 schedule, 4 invoice, 5 done
+
+    function guessFormStep(){
+      if(!s.intent) return 0;
+      if(!s.name || !s.email) return 1;
+      if(!s.pkg) return 2;
+      if(!s.date || !s.time) return 3;
+      if(!s.paid) return 4;
+      return 5;
+    }
+
+    function setFormStep(n){
+      formStep = Math.max(0, Math.min(5, n));
+      // keep the top progress bars coherent with the wizard
+      const map = [0,0,1,2,3,4];
+      step = map[formStep] ?? 0;
+      setDots();
+      renderForm();
+    }
+
+    function setFormProg(){
+      const bars = [...formWrap.querySelectorAll('[data-fw]')];
+      const idx = Math.min(formStep, 5);
+      bars.forEach((b,i)=>{
+        const fill = b.querySelector('i');
+        if(!fill) return;
+        if(i < idx) fill.style.width = '100%';
+        else if(i === idx) fill.style.width = '70%';
+        else fill.style.width = '0%';
+        if(idx === 5) fill.style.width = '100%';
+      });
+    }
+
+    function renderForm(){
+      const p = pkg();
+      const prog = `
+        <div class="fwProg" aria-label="Progress">
+          ${[0,1,2,3,4].map(i=>`<div class="fwBar" data-fw="${i}"><i></i></div>`).join('')}
+        </div>
+      `;
+
+      let body = '';
+      let nextEnabled = true;
+
+      if(formStep === 0){
+        const intentPills = intents.map(v=>`<button class="miniPill ${s.intent===v?'on':''}" type="button" data-int="${esc(v)}">${esc(v)}</button>`).join('');
+        body = `<div class="formSection" style="padding-top:0"><div class="miniRow">${intentPills}</div></div>`;
+        nextEnabled = !!s.intent;
+      }
+
+      if(formStep === 1){
+        body = `
+          <div class="formSection" style="padding-top:0">
+            <div class="grid2">
+              <div class="field">
+                <div class="formLabel">Name</div>
+                <input id="fName" value="${esc(s.name)}" placeholder="Name" />
+              </div>
+              <div class="field">
+                <div class="formLabel">Email</div>
+                <input id="fEmail" value="${esc(s.email)}" placeholder="you@domain.com" />
+              </div>
+            </div>
+            <div class="field">
+              <div class="formLabel">Note</div>
+              <textarea id="fNotes" placeholder="Optional">${esc(s.notes)}</textarea>
+            </div>
+          </div>
+        `;
+        nextEnabled = !!(s.name && s.email);
+      }
+
+      if(formStep === 2){
+        const pkgCards = pkgs.map(pp=>{
+          const on = (pp.name===s.pkg) ? 'style="border-color: rgba(37,99,235,.32); background: rgba(37,99,235,.08);"' : '';
+          return `
+            <div class="opt" data-fpkg="${esc(pp.name)}" ${on}>
+              <div class="l"><strong>${esc(pp.name)}</strong><small>${esc(pp.meta)}</small></div>
+              <div class="r">${money(pp.price)}</div>
+            </div>
+          `;
+        }).join('');
+        body = `<div class="formSection" style="padding-top:0"><div class="opts">${pkgCards}</div></div>`;
+        nextEnabled = !!s.pkg;
+      }
+
+      if(formStep === 3){
+        const datePills = dates.map(v=>`<button class="miniPill ${s.date===v?'on':''}" type="button" data-date2="${esc(v)}">${esc(v)}</button>`).join('');
+        const timePills = times.map(v=>`<button class="miniPill ${s.time===v?'on':''}" type="button" data-time2="${esc(v)}">${esc(v)}</button>`).join('');
+        body = `
+          <div class="formSection" style="padding-top:0">
+            <div class="formLabel">Date</div>
+            <div class="miniRow">${datePills}</div>
+          </div>
+          <div class="formSection">
+            <div class="formLabel">Time</div>
+            <div class="miniRow">${timePills}</div>
+          </div>
+        `;
+        nextEnabled = !!(s.date && s.time);
+      }
+
+      if(formStep === 4){
+        body = `
+          <div class="formSection" style="padding-top:0">
+            <div class="subtleCard">
+              <div class="row"><span>${esc(p.name)}</span><b>${money(p.price)}</b></div>
+              <div class="sep"></div>
+              <div class="row"><span>Total</span><b>${money(total())}</b></div>
+              <div class="due">
+                <div>
+                  <div class="k">Due now</div>
+                  <div style="font-weight:950; margin-top:2px;">Deposit</div>
+                </div>
+                <div class="v">${money(deposit())}</div>
+              </div>
+              <div class="row"><span>Remaining</span><b>${money(remaining())}</b></div>
+              <div class="policy"><span>Instant receipt</span><span class="dot"></span><span>Calendar invite</span></div>
+              <div style="margin-top:10px;"><button class="payBtn" id="fPay" type="button">Pay deposit</button></div>
+              <div class="policy"><span>Reschedule 72h</span><span class="dot"></span><span>Deposit applied</span></div>
+            </div>
+          </div>
+        `;
+        nextEnabled = false;
+      }
+
+      if(formStep === 5){
+        body = `
+          <div class="formSection" style="padding-top:0">
+            <div class="doneList">
+              <div class="doneItem"><span>Receipt</span><span>Email</span></div>
+              <div class="doneItem"><span>Calendar</span><span>Invite</span></div>
+              <div class="doneItem"><span>Next</span><span>24h</span></div>
+            </div>
+            <div class="policy"><span>Deposit applied</span><span class="dot"></span><span>Reschedule 72h</span></div>
+          </div>
+        `;
+      }
+
+      const backDisabled = (formStep === 0);
+      const nextLabel = (formStep === 4) ? ' ' : (formStep === 5 ? 'Restart' : 'Next');
+
+      formWrap.innerHTML = `
+        <div class="formShell">
+          <div class="formTop">${prog}</div>
+          <div class="formBody">${body}</div>
+          <div class="formFooter">
+            <button class="fbtn" id="fBack" type="button" ${backDisabled?'disabled':''}>Back</button>
+            ${formStep === 4
+              ? `<button class="fbtn" id="fNext" type="button" disabled style="visibility:hidden">Next</button>`
+              : `<button class="fbtn primary" id="fNext" type="button" ${(!nextEnabled && formStep!==5)?'disabled':''}>${nextLabel}</button>`}
+          </div>
+        </div>
+      `;
+
+      setFormProg();
+
+      // Bind step interactions
+      formWrap.querySelectorAll('[data-int]').forEach(b=>b.addEventListener('click', ()=>{ s.intent=b.getAttribute('data-int'); renderForm(); }));
+      formWrap.querySelectorAll('[data-fpkg]').forEach(el=>el.addEventListener('click', ()=>{ s.pkg=el.getAttribute('data-fpkg'); renderForm(); }));
+      formWrap.querySelectorAll('[data-date2]').forEach(b=>b.addEventListener('click', ()=>{ s.date=b.getAttribute('data-date2'); renderForm(); }));
+      formWrap.querySelectorAll('[data-time2]').forEach(b=>b.addEventListener('click', ()=>{ s.time=b.getAttribute('data-time2'); renderForm(); }));
+
+      const fName = formWrap.querySelector('#fName');
+      const fEmail = formWrap.querySelector('#fEmail');
+      const fNotes = formWrap.querySelector('#fNotes');
+      fName?.addEventListener('input', ()=>{ s.name = fName.value; renderForm(); });
+      fEmail?.addEventListener('input', ()=>{ s.email = fEmail.value; renderForm(); });
+      fNotes?.addEventListener('input', ()=>{ s.notes = fNotes.value; });
+
+      formWrap.querySelector('#fPay')?.addEventListener('click', ()=>{
+        showToast('Paid');
+        s.paid = true;
+        setFormStep(5);
+      });
+
+      formWrap.querySelector('#fBack')?.addEventListener('click', ()=>{ setFormStep(formStep - 1); });
+
+      formWrap.querySelector('#fNext')?.addEventListener('click', ()=>{
+        if(formStep === 5){
+          s = {intent:'', name:'', email:'', notes:'', pkg:pkgs[0].name, date:dates[0], time:times[0], paid:false};
+          setFormStep(0);
+          return;
+        }
+        setFormStep(formStep + 1);
+      });
+    }
+
+    // --- Top progress dots (Chat + wizard alignment) ---
+    function setDots(){
+      const fills = [0,0,0,0,0];
+      for(let i=0;i<5;i++){
+        if(i < step) fills[i] = 100;
+        if(i === step) fills[i] = 70;
+        if(step === 4) fills[i] = 100;
+        const el = document.getElementById('d'+i);
+        if(el) el.style.width = fills[i] + '%';
+      }
+    }
+
+    function scrollBottom(){
+      requestAnimationFrame(()=>{ chat.scrollTop = chat.scrollHeight; });
+    }
+
+    function addMsg(role, html){
+      const m = document.createElement('div');
+      m.className = 'msg ' + role;
+      const b = document.createElement('div');
+      b.className = 'bub';
+      b.innerHTML = html;
+      m.appendChild(b);
+      chat.appendChild(m);
+      scrollBottom();
+    }
+
+    function addTyping(){
+      const m = document.createElement('div');
+      m.className = 'msg bot';
+      const t = document.createElement('div');
+      t.className = 'typing';
+      t.innerHTML = '<i></i><i></i><i></i>';
+      m.appendChild(t);
+      chat.appendChild(m);
+      scrollBottom();
+      return () => m.remove();
+    }
+
+    function bot(text){
+      const rm = addTyping();
+      setTimeout(()=>{ rm(); addMsg('bot', esc(text)); }, 220);
+    }
+
+    function setComposerHTML(html){ composer.innerHTML = html; }
+
+    function chip(label, cls='', attrs=''){
+      return `<button class="chip ${cls}" type="button" ${attrs}>${esc(label)}</button>`;
+    }
+
+    function chipsUI(labels, onPick, mode=''){
+      const cls = (mode==='segment') ? 'chips segment' : 'chips';
+      const html = `<div class="${cls}">${labels.map(l=>chip(l,'',`data-v="${esc(l)}"`)).join('')}</div>`;
+      setComposerHTML(html);
+      composer.querySelectorAll('[data-v]').forEach(btn=>{
+        btn.addEventListener('click', ()=>onPick(btn.getAttribute('data-v')));
+      });
+    }
+
+    function inputUI(placeholder, key, nextLabel='Continue', allowSkip=true){
+      setComposerHTML(`
+        <div class="inputRow">
+          <input class="input" id="in" placeholder="${esc(placeholder)}" />
+          ${chip(nextLabel,'primary','id="go"')}
+        </div>
+        <div class="chips">${allowSkip ? chip('Skip','ghost','id="skip"') : ''}</div>
+      `);
+      const inp = composer.querySelector('#in');
+      const go = composer.querySelector('#go');
+      const skip = composer.querySelector('#skip');
+      if(inp) inp.focus();
+
+      const submit = () => {
+        const val = (inp?.value || '').trim();
+        if(val){ s[key] = val; addMsg('user', esc(val)); }
+        else { addMsg('user','—'); }
+        next();
+      };
+
+      go?.addEventListener('click', submit);
+      inp?.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); submit(); } });
+      skip?.addEventListener('click', ()=>{ addMsg('user','Skip'); next(); });
+    }
+
+    function packagesUI(){
+      setComposerHTML(`
+        <div class="opts">
+          ${pkgs.map(p=>{
+            const on = (s.pkg===p.name)
+              ? 'style="border-color: rgba(37,99,235,.35); background: rgba(37,99,235,.08);"'
+              : '';
+            return `
+              <div class="opt" data-pkg="${esc(p.name)}" ${on}>
+                <div class="l"><strong>${esc(p.name)}</strong><small>${esc(p.meta)}</small></div>
+                <div class="r">${money(p.price)}</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+        <div class="chips" style="margin-top:10px;">
+          ${chip('Continue','primary','id="go"')}
+          ${chip('Back','ghost','id="back"')}
+        </div>
+      `);
+
+      composer.querySelectorAll('[data-pkg]').forEach(el=>{
+        el.addEventListener('click', ()=>{
+          s.pkg = el.getAttribute('data-pkg');
+          packagesUI();
+        });
+      });
+
+      composer.querySelector('#go')?.addEventListener('click', ()=>{ addMsg('user', esc(s.pkg)); next(); });
+      composer.querySelector('#back')?.addEventListener('click', ()=>{ back(); });
+    }
+
+    function scheduleUI(which){
+      if(which==='date'){
+        setComposerHTML(`
+          <div class="chips">${dates.map(d=>chip(d,'',`data-date="${esc(d)}"`)).join('')}</div>
+          <div class="chips" style="margin-top:10px;">${chip('Back','ghost','id="back"')}</div>
+        `);
+        composer.querySelectorAll('[data-date]').forEach(btn=>{
+          btn.addEventListener('click', ()=>{
+            s.date = btn.getAttribute('data-date');
+            addMsg('user', esc(s.date));
+            stage = 'time';
+            step = 2; setDots();
+            bot('Time?');
+            scheduleUI('time');
+          });
+        });
+        composer.querySelector('#back')?.addEventListener('click', ()=>back());
+      }else{
+        setComposerHTML(`
+          <div class="chips">${times.map(t=>chip(t,'',`data-time="${esc(t)}"`)).join('')}</div>
+          <div class="chips" style="margin-top:10px;">${chip('Back','ghost','id="back"')}</div>
+        `);
+        composer.querySelectorAll('[data-time]').forEach(btn=>{
+          btn.addEventListener('click', ()=>{
+            s.time = btn.getAttribute('data-time');
+            addMsg('user', esc(s.time));
+            next();
+          });
+        });
+        composer.querySelector('#back')?.addEventListener('click', ()=>back());
+      }
+    }
+
+    function invoiceUI(){
+      const p = pkg();
+      addMsg('bot', `
+        <div style="font-weight:950; font-size:14px;">Invoice</div>
+        <div class="invoice">
+          <div class="row"><span>${esc(p.name)}</span><b>${money(p.price)}</b></div>
+          <div class="sep"></div>
+          <div class="row"><span>Total</span><b>${money(total())}</b></div>
+          <div class="due">
+            <div>
+              <div class="k">Due now</div>
+              <div style="font-weight:950; margin-top:2px;">Deposit</div>
+            </div>
+            <div class="v">${money(deposit())}</div>
+          </div>
+          <div class="row"><span>Remaining</span><b>${money(remaining())}</b></div>
+        </div>
+        <div class="policy"><span>Reschedule 72h</span><span class="dot"></span><span>Deposit applied</span></div>
+      `);
+
+      setComposerHTML(`
+        <div class="chips">
+          ${chip('Pay deposit','primary','id="pay"')}
+          ${chip('Policy','ghost','id="pol"')}
+          ${chip('Back','ghost','id="back"')}
+        </div>
+      `);
+
+      composer.querySelector('#pol')?.addEventListener('click', ()=>showToast('Policy shown'));
+      composer.querySelector('#back')?.addEventListener('click', ()=>back());
+      composer.querySelector('#pay')?.addEventListener('click', ()=>{
+        addMsg('user', 'Pay deposit');
+        showToast('Paid');
+        s.paid = true;
+        next();
+      });
+    }
+
+    function doneUI(){
+      const p = pkg();
+      addMsg('bot', `Booked ✅<div class="mut">${esc(p.name)} • ${esc(s.date)} • ${esc(s.time)}</div>`);
+      addMsg('bot', `
+        <div class="doneList">
+          <div class="doneItem"><span>Receipt</span><span>Email</span></div>
+          <div class="doneItem"><span>Calendar</span><span>Invite</span></div>
+          <div class="doneItem"><span>Follow-up</span><span>Within 24h</span></div>
+        </div>
+        <div class="policy"><span>Deposit applied</span><span class="dot"></span><span>Reschedule 72h</span></div>
+      `);
+
+      setComposerHTML(`<div class="chips">${chip('Restart','ghost','id="r"')}${chip('Done','primary','id="d"')}</div>`);
+      composer.querySelector('#r')?.addEventListener('click', ()=>start(true));
+      composer.querySelector('#d')?.addEventListener('click', ()=>showToast('Done'));
+    }
+
+    // Flow
+    let stage = 'intent';
+
+    function start(resetAll=false){
+      if(resetAll){
+        chat.innerHTML = '';
+        step = 0;
+        s = {intent:'', name:'', email:'', notes:'', pkg:pkgs[0].name, date:dates[0], time:times[0], paid:false};
+        stage = 'intent';
+      }
+      setDots();
+      bot('Hi — what are we booking?');
+      chipsUI(intents, (v)=>{ s.intent=v; addMsg('user', esc(v)); next(); }, 'segment');
+      if(uiMode==='form') renderForm();
+    }
+
+    function back(){
+      showToast('Back');
+      if(stage === 'invoice' || stage === 'time' || stage === 'date'){
+        stage = 'package';
+        step = 1;
+        setDots();
+        bot('Pick a package');
+        packagesUI();
+        return;
+      }
+      stage = 'intent';
+      step = 0;
+      setDots();
+      bot('What are we booking?');
+      chipsUI(intents, (v)=>{ s.intent=v; addMsg('user', esc(v)); next(); }, 'segment');
+    }
+
+    function next(){
+      if(stage === 'intent'){
+        stage = 'name';
+        step = 0; setDots();
+        bot('Name?');
+        inputUI('Name', 'name', 'Continue', true);
+        return;
+      }
+
+      if(stage === 'name'){
+        stage = 'email';
+        step = 0; setDots();
+        bot('Email for receipt + invite?');
+        inputUI('you@domain.com', 'email', 'Continue', true);
+        return;
+      }
+
+      if(stage === 'email'){
+        stage = 'notes';
+        step = 0; setDots();
+        bot('Anything to note?');
+        chipsUI(['No','Add note'], (v)=>{
+          addMsg('user', esc(v));
+          if(v==='Add note'){
+            inputUI('Short note', 'notes', 'Save', true);
+          }else{
+            s.notes='';
+            stage = 'package';
+            step = 1; setDots();
+            bot('Pick a package');
+            packagesUI();
+          }
+        });
+        return;
+      }
+
+      if(stage === 'notes'){
+        stage = 'package';
+        step = 1; setDots();
+        bot('Pick a package');
+        packagesUI();
+        return;
+      }
+
+      if(stage === 'package'){
+        stage = 'date';
+        step = 2; setDots();
+        bot('Date?');
+        scheduleUI('date');
+        return;
+      }
+
+      if(stage === 'time'){
+        stage = 'invoice';
+        step = 3; setDots();
+        bot('Got it.');
+        setTimeout(()=>{
+          addMsg('bot', `<div class="mut">${esc(pkg().name)} • ${esc(s.date)} • ${esc(s.time)}</div>`);
+          invoiceUI();
+        }, 180);
+        return;
+      }
+
+      if(stage === 'invoice'){
+        stage = 'done';
+        step = 4; setDots();
+        doneUI();
+        return;
+      }
+
+      if(stage === 'done'){
+        showToast('Done');
+      }
+    }
+
+    // --- Tests (run once) ---
+    function runTests(){
+      assert(document.querySelector('.pane'), 'pane missing');
+      assert(document.querySelector('#chat'), 'chat missing');
+      assert(document.querySelector('#composer'), 'composer missing');
+      assert(document.querySelector('#formWrap'), 'formWrap missing');
+      assert(document.querySelector('#modeChat') && document.querySelector('#modeForm'), 'mode toggle missing');
+      assert(typeof chipsUI === 'function', 'chipsUI missing');
+      assert(typeof setMode === 'function', 'setMode missing');
+      assert(typeof setDots === 'function', 'setDots missing');
+
+      // Chips UI should render 3 intent buttons in segment mode
+      chipsUI(['A','B','C'], ()=>{}, 'segment');
+      assert(composer.querySelectorAll('button.chip').length === 3, 'segment chips count wrong');
+
+      // Escaping should not break attributes
+      const e = esc('"<>&');
+      assert(e.includes('&quot;') && e.includes('&lt;') && e.includes('&gt;') && e.includes('&amp;'), 'esc broken');
+
+      // Mode switch should not throw and should render form shell
+      setMode('form');
+      assert(formWrap.style.display === 'block', 'form mode not visible');
+      assert(formWrap.querySelector('.formShell'), 'form shell missing');
+      assert(formWrap.querySelectorAll('[data-fw]').length === 5, 'form progress bars missing');
+
+      setMode('chat');
+      assert(chatWrap.style.display === 'flex', 'chat mode not visible');
+
+      // Dots update should set a width style
+      step = 0; setDots();
+      const d0 = document.getElementById('d0');
+      assert(d0 && typeof d0.style.width === 'string', 'dot width not set');
+
+      // Restore to start state
+      start(true);
+      setMode('chat');
+      console.log('[Payform prototype] tests passed');
+    }
+
+    // Boot
+    runTests();
+  </script>
+</body>
+</html>
